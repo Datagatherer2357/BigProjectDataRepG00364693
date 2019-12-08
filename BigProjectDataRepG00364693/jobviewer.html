@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+        <title>View IT Jobs</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+       
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    /* Body text */
+    body,h1 {font-family: "Raleway", Garamond}
+    h1 {letter-spacing: 3px}
+    .w3-row-padding img {margin-bottom: 12px}
+    body {color: DarkSlateGray;}
+    body {font-size: large;}
+    
+    /* When moving the mouse over the submit button, add a color */
+    input[type=submit]:hover {
+    background-color: lightgrey;
+    }
+    /* When hovered bars change colour */
+    rect:hover{fill:#f44336;}
+  
+    /*Text box forms*/
+    .container {
+      width: 500px;
+      clear: both;
+    }
+    .container input {
+      width: 100%;
+      clear: both;
+    }
+    
+    </style>
+    </head>
+
+<body style="background-color:#81BEF7;"> 
+        <h1><center><b><i> ~ IT Graduate Jobs Database ~ </b></i></center></h1>
+        
+        <!-- Description container -->
+        <div class="container"><center> 
+             
+        <h3><b> Galway-Mayo Institute of Technology  </b></h3>
+        <p>(Administrative internal database for assisting graduate students)</p>
+         
+        <div> <center><button id="showCreateButton" onclick="showCreate()">Create new job...</button></center></div>
+        </br>
+        <b>Helping GMIT students grow, aspire and succeed</b>
+        </br>
+            </center></div>
+        
+        <div>
+            <table class="table" id="jobTable">
+                <tr>
+                        <th>Job id</th>
+                        <th>Location</th>
+                        <th>Job title</th>
+						<th>Company</th>
+                        <th>Salary</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                </tr>
+                
+            </table>
+        </div>
+  
+        <div class="background"></div>
+        <div class="container" id='createUpdateForm' style="display: none"><center>
+                <h2><center><span id="createLabel">Create a new</span> <span id="updateLabel">Update a </span> Job:</h2>
+                <input type="hidden" name="id"/> 
+                Location <input type="text" name="location" /><br/>
+				Job Title<input type="text" name="jobTitle"/> <br/>
+				Company<input type="text" name="company"/> <br/>
+                Salary<input type="number" name="salary"/> <br/>
+                <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
+                <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
+        </center></div>
+    </body>
+    <script>
+    function showCreate(){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('jobTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="inline"
+        document.getElementById('updateLabel').style.display="none"
+
+        document.getElementById('doCreateButton').style.display="block"
+        document.getElementById('doUpdateButton').style.display="none"
+
+    }
+    function showViewAll(){
+        document.getElementById('showCreateButton').style.display="block"
+        document.getElementById('jobTable').style.display="block"
+        document.getElementById('createUpdateForm').style.display="none"
+    }
+    function showUpdate(buttonElement){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('jobTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="none"
+        document.getElementById('updateLabel').style.display="inline"
+
+        document.getElementById('doCreateButton').style.display="none"
+        document.getElementById('doUpdateButton').style.display="block"
+
+
+        var rowElement = buttonElement.parentNode.parentNode
+        // these is a way of finding the closest <tr> which would safer, closest()
+        
+        var job = getJobFromRow(rowElement)
+        populateFormWithJob(job)
+    }
+    function doCreate(){
+        var form = document.getElementById('createUpdateForm')
+
+        var job = {}
+       
+		job.location = form.querySelector('input[name="location"]').value
+        job.jobTitle = form.querySelector('input[name="jobTitle"]').value
+        job.company = form.querySelector('input[name="company"]').value
+        job.salary = form.querySelector('input[name="salary"]').value
+        console.log(JSON.stringify(job))
+        createJobAjax(job)
+        
+        
+    }
+    function doUpdate(){
+        var job = getJobFromForm();
+        var rowElement = document.getElementById(job.id);
+        updateJobAjax(job);
+        setJobInRow(rowElement,job);
+       
+        clearForm();
+        showViewAll();
+    }
+    function doDelete(r){
+        var tableElement = document.getElementById('jobTable');
+        var rowElement = r.parentNode.parentNode;
+        var index = rowElement.rowIndex;
+        deleteJobAjax(rowElement.getAttribute("id"));
+        tableElement.deleteRow(index);
+    }
+    function addJobToTable(job){
+        var tableElement = document.getElementById('jobTable')
+        var rowElement = tableElement.insertRow(-1)
+        rowElement.setAttribute('id',job.id)
+        var cell1 = rowElement.insertCell(0);
+        cell1.innerHTML = job.id
+        var cell2 = rowElement.insertCell(1);
+        cell2.innerHTML = job.location
+        var cell3 = rowElement.insertCell(2);
+        cell3.innerHTML = job.jobTitle
+        var cell4 = rowElement.insertCell(3);
+        cell4.innerHTML = job.company
+		var cell5 = rowElement.insertCell(4);
+        cell5.innerHTML = job.salary
+        var cell6 = rowElement.insertCell(5);
+        cell6.innerHTML = '<button onclick="showUpdate(this)">Update Job</button>'
+        var cell7 = rowElement.insertCell(6);
+        cell7.innerHTML = '<button onclick=doDelete(this)>Delete Job</button>'
+
+    }
+
+    function clearForm(){
+        var form = document.getElementById('createUpdateForm')
+
+        form.querySelector('input[name="location"]').value=''
+		form.querySelector('input[name="jobTitle"]').value=''
+        form.querySelector('input[name="company"]').value=''
+        form.querySelector('input[name="salary"]').value=''
+    }
+    function getJobFromRow(rowElement){
+        var job ={}
+        job.id  = rowElement.getAttribute('id')
+        job.location = rowElement.cells[1].firstChild.textContent
+		job.jobTitle = rowElement.cells[2].firstChild.textContent
+        job.company = rowElement.cells[3].firstChild.textContent
+        job.salary = parseInt(rowElement.cells[4].firstChild.textContent,10)
+        return job
+    }
+    function setJobInRow(rowElement, job){
+        rowElement.cells[0].firstChild.textContent= job.id  
+		rowElement.cells[1].firstChild.textContent= job.location 
+        rowElement.cells[2].firstChild.textContent= job.jobTitle 
+        rowElement.cells[3].firstChild.textContent= job.company
+        rowElement.cells[4].firstChild.textContent= job.salary
+    }
+    function populateFormWithJob(job){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').disabled = true
+
+        form.querySelector('input[name="id"]').value  = job.id
+		form.querySelector('input[name="location"]').value= job.location
+        form.querySelector('input[name="jobTitle"]').value= job.jobTitle
+        form.querySelector('input[name="company"]').value= job.company
+        form.querySelector('input[name="salary"]').value= job.salary
+        return job
+    }
+    function getJobFromForm(){
+        var form = document.getElementById('createUpdateForm')
+        var job = {}
+        job.id = form.querySelector('input[name="id"]').value
+		job.location = form.querySelector('input[name="location"]').value
+        job.jobTitle = form.querySelector('input[name="jobTitle"]').value
+        job.company = form.querySelector('input[name="company"]').value
+        job.salary = parseInt(form.querySelector('input[name="salary"]').value,10)
+        console.log(JSON.stringify(job))
+        return job
+    }
+    function getAllAjax(){
+        $.ajax({
+            "url": "http://127.0.0.1:5000/jobs",
+            "method":"GET",
+            "data":"",
+            "dataType": "JSON",
+            "success":function(result){
+                //console.log(result);
+                for (job of result){
+                    addJobToTable(job);
+                }
+                
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+
+    }
+    function createJobAjax(job){
+        //var job = {"id":"1","location":"Cork"}
+        console.log(JSON.stringify(job));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/jobs",
+            "method":"POST",
+            "data":JSON.stringify(job),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                //console.log(result);
+                job.id = result.id
+                addJobToTable(job)
+                clearForm()
+                showViewAll()
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function updateJobAjax(job){
+        //var car = {"reg":"12 D 1234","price":8000}
+        console.log(JSON.stringify(job));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/jobs/"+encodeURI(job.id),
+            "method":"PUT",
+            "data":JSON.stringify(job),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+               // console.log(result);
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    function deleteJobAjax(id){
+        
+        //console.log(JSON.stringify('deleting '+id));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/jobs/"+encodeURI(id),
+            "method":"DELETE",
+            "data":"",
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                //console.log(result);
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
+    getAllAjax();
+  
+
+    
+    </script>
+</html>
