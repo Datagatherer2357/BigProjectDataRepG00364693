@@ -4,13 +4,21 @@ import mysql.connector
 import dbconfig as cfg # import configurations
 class JobDAO:
     db=""
-    def __init__(self): 
+    def connectToDB(self):
         self.db = mysql.connector.connect(
-         host=cfg.mysql['host'],
-          user=cfg.mysql['user'],
-          password=cfg.mysql['password'],
-          database=cfg.mysql['database']
+            host=       cfg.mysql['host'],
+            user=       cfg.mysql['user'],
+            password=   cfg.mysql['password'],
+            database=   cfg.mysql['database']
         )
+    def __init__(self): 
+        self.connectToDB()
+     
+    
+    def getCursor(self):
+        if not self.db.is_connected():
+            self.connectToDB()
+        return self.db.cursor()
     
             
     def create(self, values):
@@ -19,7 +27,9 @@ class JobDAO:
         cursor.execute(sql, values)
 
         self.db.commit()
-        return cursor.lastrowid
+        lastRowId=cursor.lastrowid
+        cursor.close
+        return lastRowId
 
     def getAll(self):
         cursor = self.db.cursor()
@@ -31,7 +41,7 @@ class JobDAO:
         for result in results:
             print(result)
             returnArray.append(self.convertToDictionary(result))
-
+        cursor.close
         return returnArray
 
     def findByID(self, id):
@@ -41,7 +51,9 @@ class JobDAO:
 
         cursor.execute(sql, values)
         result = cursor.fetchone()
-        return self.convertToDictionary(result)
+        job=self.convertToDictionary(result)
+        cursor.close()
+        return job
 
     def update(self, values):
         cursor = self.db.cursor()
@@ -56,6 +68,7 @@ class JobDAO:
         cursor.execute(sql, values)
 
         self.db.commit()
+        cursor.close()
         print("delete done")
 
     def convertToDictionary(self, result):
