@@ -22,22 +22,21 @@ class JobDAO:
     
             
     def create(self, values):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         sql="insert into job (location, jobTitle, company, salary) values (%s,%s,%s,%s)"
         cursor.execute(sql, values)
-
         db.commit()
         lastRowId=cursor.lastrowid
         cursor.close
         return lastRowId
 
     def getAll(self):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         sql="select * from job"
         cursor.execute(sql)
         results = cursor.fetchall()
         returnArray = []
-        print(results)
+     #  print(results)
         for result in results:
             print(result)
             returnArray.append(self.convertToDictionary(result))
@@ -45,7 +44,7 @@ class JobDAO:
         return returnArray
 
     def findByID(self, id):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         sql="select * from job where id = %s"
         values = (id,)
 
@@ -56,12 +55,14 @@ class JobDAO:
         return job
 
     def update(self, values):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         sql="update job set location= %s, jobTitle=%s, company=%s, salary=%s  where id = %s"
         cursor.execute(sql, values)
         db.commit()
+        cursor.close()
+
     def delete(self, id):
-        cursor = self.db.cursor()
+        cursor = self.getCursor()
         sql="delete from job where id = %s"
         values = (id,)
 
