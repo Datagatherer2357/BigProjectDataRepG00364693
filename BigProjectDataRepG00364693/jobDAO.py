@@ -25,7 +25,7 @@ class JobDAO:
         cursor = self.getCursor()
         sql="insert into job (location, jobTitle, company, salary) values (%s,%s,%s,%s)"
         cursor.execute(sql, values)
-        db.commit()
+        self.db.commit()
         lastRowId=cursor.lastrowid
         cursor.close
         return lastRowId
@@ -58,7 +58,7 @@ class JobDAO:
         cursor = self.getCursor()
         sql="update job set location= %s, jobTitle=%s, company=%s, salary=%s  where id = %s"
         cursor.execute(sql, values)
-        db.commit()
+        self.db.commit()
         cursor.close()
 
     def delete(self, id):
@@ -68,7 +68,7 @@ class JobDAO:
 
         cursor.execute(sql, values)
 
-        db.commit()
+        self.db.commit()
         cursor.close()
         print("delete done")
 
