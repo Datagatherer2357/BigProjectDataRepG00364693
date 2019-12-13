@@ -4,7 +4,9 @@ Project for Data Representation - HDIP Data Analytics GMIT
 
 Gareth Duffy - g00364693
 
-**Option A - "Web application project": ~ IT Graduate Jobs Database ~** 
+**Option A - "Web application project":** 
+
+~ IT Graduate Jobs Database ~
 
 - Rest API with complete CRUD functionality 
 - Servers via localhost and/or Python Anywhere
