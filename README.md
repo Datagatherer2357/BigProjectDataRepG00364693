@@ -1,8 +1,6 @@
 # BigProjectDataRepG00364693
 
-Project for Data Representation - HDIP Data Analytics GMIT
-
-Gareth Duffy - g00364693
+### Project for Data Representation - HDIP Data Analytics GMIT - Gareth Duffy - g00364693
 
 **Option A - "Web application project":** 
 
