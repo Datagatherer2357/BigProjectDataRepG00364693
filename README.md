@@ -6,6 +6,8 @@
 
 ~ IT Graduate Jobs Database ~
 
+**Features:**
+
 - Rest API with complete CRUD functionality 
 - Servers via localhost and/or Python Anywhere
 - Web interface complete with CRUD operations and Ajax for local host and/or Python Anywhere
@@ -28,5 +30,6 @@
 
 
 **Hosted on Python Anywhere:**
-URL: http://garethduffy.pythonanywhere.com/jobviewerPyANY.html
+CRUD INTERFACE URL: http://garethduffy.pythonanywhere.com/jobviewerPyANY.html
+GET ALL JOBS URL: http://garethduffy.pythonanywhere.com/jobs
  
