@@ -6,7 +6,7 @@ Gareth Duffy - g00364693
 
 **Option A - "Web application project":**
 
-***~ IT Graduate Jobs Database ~***
+**~ IT Graduate Jobs Database ~**
 
 - Rest API with complete CRUD functionality 
 - Servers via localhost and/or Python Anywhere
@@ -17,16 +17,16 @@ Gareth Duffy - g00364693
 
 **File Index and descriptions**
 
-".gitignore" - Standard ignore file 
-"db.config.py" - File for configuration of MySQL parameters
-"db.configtemplate.py" - Template file for configuration of MySQL parameters
-"job.sql" - SQL dump file (job table)
-"jobDAO.py" - Data Access Object file for interacting with the jobs database
-"jobs_DBserver.py" - Web server for local host
-"jobs_DBserverPyANY.py" - Web server for Python Anywhere
-"jobviewer.html" - Webpage with CRUD interface for interacting with database via localhost
-"jobviewerPyANY.html" - Webpage with CRUD interface for interacting with database via Python Anywhere
-"requirements.txt" - Module and library requirements text file
+- ".gitignore" - Standard ignore file 
+- "db.config.py" - File for configuration of MySQL parameters
+- "db.configtemplate.py" - Template file for configuration of MySQL parameters
+- "job.sql" - SQL dump file (job table)
+- "jobDAO.py" - Data Access Object file for interacting with the jobs database
+- "jobs_DBserver.py" - Web server for local host
+- "jobs_DBserverPyANY.py" - Web server for Python Anywhere
+- "jobviewer.html" - Webpage with CRUD interface for interacting with database via localhost
+- "jobviewerPyANY.html" - Webpage with CRUD interface for interacting with database via Python Anywhere
+- "requirements.txt" - Module and library requirements text file
 
 
 **Hosted on Python Anywhere:**
