@@ -1,37 +1,45 @@
-# DAO that facilitates interaction with SQL database
+# Connection pooling DAO that facilitates increased traffic SQL database
 
 import mysql.connector
-import dbconfigtemplate as cfg # import configurations
+import dbconfig as cfg # import configurations
+
 class JobDAO:
     db=""
-    def connectToDB(self):
-        self.db = mysql.connector.connect(
+    def initConnectToDB(self):
+        db = mysql.connector.connect(
             host=       cfg.mysql['host'],
             user=       cfg.mysql['user'],
             password=   cfg.mysql['password'],
-            database=   cfg.mysql['database']
+            database=   cfg.mysql['database'],
+            pool_name='my_connection_pool',
+            pool_size=10
         )
-    def __init__(self): 
-        self.connectToDB()
-     
+        return db
     
-    def getCursor(self):
-        if not self.db.is_connected():
-            self.connectToDB()
-        return self.db.cursor()
-    
+    def getConnection(self):
+        db = mysql.connector.connect(
+            pool_name= 'my_connection_pool' # open up connection
+        )
+        return db
+
+    def __init__(self): # initial connection
+        db=self.initConnectToDB()
+        db.close()
+       
             
     def create(self, values):
-        cursor = self.getCursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql="insert into job (location, jobTitle, company, salary) values (%s,%s,%s,%s)"
         cursor.execute(sql, values)
         self.db.commit()
         lastRowId=cursor.lastrowid
-        cursor.close
+        db.close
         return lastRowId
 
     def getAll(self):
-        cursor = self.getCursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql="select * from job"
         cursor.execute(sql)
         results = cursor.fetchall()
@@ -40,36 +48,37 @@ class JobDAO:
         for result in results:
             print(result)
             returnArray.append(self.convertToDictionary(result))
-        cursor.close
+        db.close
         return returnArray
 
     def findByID(self, id):
-        cursor = self.getCursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql="select * from job where id = %s"
         values = (id,)
 
         cursor.execute(sql, values)
         result = cursor.fetchone()
         job=self.convertToDictionary(result)
-        cursor.close()
+        db.close()
         return job
 
     def update(self, values):
-        cursor = self.getCursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql="update job set location= %s, jobTitle=%s, company=%s, salary=%s  where id = %s"
         cursor.execute(sql, values)
         self.db.commit()
-        cursor.close()
+        db.close()
 
     def delete(self, id):
-        cursor = self.getCursor()
+        db = self.getConnection()
+        cursor = db.cursor()
         sql="delete from job where id = %s"
         values = (id,)
-
         cursor.execute(sql, values)
-
         self.db.commit()
-        cursor.close()
+        db.close()
      #  print("delete done")
 
     def convertToDictionary(self, result):
