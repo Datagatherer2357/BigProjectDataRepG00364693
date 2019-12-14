@@ -27,6 +27,8 @@
 - "jobviewer.html" - Webpage with CRUD interface for interacting with database via localhost
 - "jobviewerPyANY.html" - Webpage with CRUD interface for interacting with database via Python Anywhere
 - "requirements.txt" - Module and library requirements text file
+- "connectionPooling_jobDAO.py" - Altered DAO to prevent crash/facilitate more traffic
+- "test_poolingDAO.py" - Test file for pooling connection
 
 
 **Hosted on Python Anywhere:**
