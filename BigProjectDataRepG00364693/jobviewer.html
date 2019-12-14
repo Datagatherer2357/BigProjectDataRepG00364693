@@ -25,13 +25,19 @@
   
     /*Text box forms*/
     .container {
-      width: 500px;
-      clear: both;
+    position: relative;
+    width: 500px;
+    clear: both;
     
     }
     .container input {
-      width: 100%;
-      clear: both;
+    width: 100%;
+    clear: both;
+    }
+    
+    .container {
+      padding: 70px 0;
+      border: 3px solid green;
     }
     
     </style>
@@ -52,8 +58,8 @@
         </br>
             </center></div>
         
-        <div>
-            <table class="table" id="jobTable">
+        <div class="container">
+            <table class="container" id="jobTable" >
                 <tr>
                         <th>Job id</th>
                         <th>Location</th>
@@ -66,10 +72,10 @@
                 
             </table>
         </div>
-  
-        <div class="background"></div>
-        <div class="container" id='createUpdateForm' style="display: none"><center>
-                <h2><center><span id="createLabel">Create a new</span> <span id="updateLabel">Update a </span> Job:</h2>
+               
+      
+        <div class="container" id='createUpdateForm' style="display: none">
+                <h2><center><span id="createLabel">Create a new</span> <span id="updateLabel">Update a </span> Job:</center></h2>
                 <input type="hidden" name="id"/> 
                 Location <input type="text" name="location" /><br/>
 				Job Title<input type="text" name="jobTitle"/> <br/>
@@ -77,7 +83,7 @@
                 Salary<input type="number" name="salary"/> <br/>
                 <span><button id="doCreateButton" onclick="doCreate()">Create</button></span>
                 <span><button id="doUpdateButton" onclick="doUpdate()">Update</button></span>
-        </center></div>
+        </div>
     </body>
     <script>
     function showCreate(){
